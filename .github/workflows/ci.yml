@@ -1,0 +1,31 @@
+name: 'Captain CI example'
+on:
+  pull_request:
+  push:
+    paths-ignore:
+      - README.md
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:8.2
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install composer dependencies
+        run: |
+          composer install --no-scripts
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+      - uses: rwx-research/setup-captain@v1
+      - run: |
+          captain run \
+            --suite-id captain-examples-phpunit \
+            --test-results tmp/phpunit.xml \
+            --language PHP \
+            --framework PHPUnit \
+            -- \
+            vendor/bin/phpunit --log-junit tmp/phpunit.xml tests/
+        env:
+          RWX_ACCESS_TOKEN: ${{ secrets.RWX_ACCESS_TOKEN }}
