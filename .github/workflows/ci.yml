@@ -18,5 +18,14 @@ jobs:
         run: |
           cp .env.example .env
           php artisan key:generate
+      - uses: rwx-research/setup-captain@v1
       - run: |
-          vendor/bin/phpunit tests/
+          captain run \
+            --suite-id captain-examples-phpunit \
+            --test-results tmp/phpunit.xml \
+            --language PHP \
+            --framework PHPUnit \
+            -- \
+            vendor/bin/phpunit --log-junit tmp/phpunit.xml tests/
+        env:
+          RWX_ACCESS_TOKEN: ${{ secrets.RWX_ACCESS_TOKEN }}
