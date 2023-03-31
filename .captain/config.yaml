@@ -1,0 +1,7 @@
+test-suites:
+  captain-examples-phpunit:
+    command: vendor/bin/phpunit --log-junit tmp/phpunit.xml tests/
+    results:
+      language: PHP
+      framework: PHPUnit
+      path: tmp/phpunit.xml
